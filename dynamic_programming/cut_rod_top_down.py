@@ -15,8 +15,6 @@ def initialize_arrays():
 
 
 def cut_rod(i):
-    global pieces
-    global solution
     if pieces[i]["optimal_val"] != 0:
         return pieces[i]["optimal_val"]
     if i == 0:
