@@ -1,5 +1,5 @@
 prices = [1, 5, 8, 9, 10, 17, 17, 20, 24, 30]
-k = 18
+k = 30
 pieces = []
 solution = []
 
@@ -12,30 +12,30 @@ def initialize_arrays():
         i += 1
 
 
-def cut_rod(i, n):
-    max_val = 0
-    j = 0
-    while j < i - 1:
-        j_complementary = i - j - 2
-        current_val = pieces[j]["optimal_val"] + pieces[j_complementary]["optimal_val"]
-        if current_val > max_val:
-            max_val = current_val
-            pieces[i - 1]["optimal_val"] = max_val
-            pieces[i - 1]["first_half"] = j
-            pieces[i - 1]["second_half"] = j_complementary
-        j += 1
-    if i <= len(prices) and prices[i - 1] > max_val:
-        pieces[i - 1]["optimal_val"] = prices[i - 1]
-        pieces[i - 1]["first_half"] = i - 1
-        pieces[i - 1]["second_half"] = -1
-    if i == n:
-        return pieces[n - 1]["optimal_val"]
-    else:
-        return cut_rod(i + 1, n)
+def cut_rod(n):
+    i = 0
+    while i < n:
+        j = 0
+        max_val = 0
+        while j < i:
+            j_complementary = i - j - 1
+            current_val = pieces[j]["optimal_val"] + pieces[j_complementary]["optimal_val"]
+            if current_val > max_val:
+                max_val = current_val
+                pieces[i]["optimal_val"] = max_val
+                pieces[i]["first_half"] = j
+                pieces[i]["second_half"] = j_complementary
+            j += 1
+        if i < len(prices) and prices[i] > max_val:
+            pieces[i]["optimal_val"] = prices[i]
+            pieces[i]["first_half"] = i
+            pieces[i]["second_half"] = -1
+        i += 1
+    return pieces[n - 1]["optimal_val"]
 
 
 def find_solution(i):
-    if pieces[i - 1]["second_half"] == -1:
+    if pieces[i - 1]["first_half"] == i - 1:
         solution[i - 1] += 1
     else:
         find_solution(pieces[i - 1]["first_half"] + 1)
@@ -45,7 +45,7 @@ def find_solution(i):
 def print_solution():
     if k >= 1:
         initialize_arrays()
-        optimized_val = cut_rod(1, k)
+        optimized_val = cut_rod(k)
         find_solution(k)
         i = 0
         print("The optimized value is (" + str(optimized_val) + ")\n")

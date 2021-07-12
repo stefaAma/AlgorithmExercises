@@ -5,8 +5,6 @@ solution = []
 
 
 def initialize_arrays():
-    global pieces
-    global solution
     i = 0
     while i < k:
         pieces.append({"optimal_val": 0, "first_half": -1, "second_half": -1})
