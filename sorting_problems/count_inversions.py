@@ -1,4 +1,4 @@
-arr = [8, 4, 2, 1]
+arr = [8, 4, 5, 4, 9, 5, 5]
 inversions = 0
 
 
@@ -20,11 +20,13 @@ def merge(array, first, mid, last):
     i = 0
     j = 0
     k = first
-    while i < len(arr1) or j < len(arr2):
-        if j < len(arr2) and (i == len(arr1) or arr2[j] <= arr1[i]):
+    n1 = len(arr1)
+    n2 = len(arr2)
+    while i < n1 or j < n2:
+        if j < n2 and (i == n1 or arr2[j] < arr1[i]):
             array[k] = arr2[j]
             global inversions
-            inversions += len(arr1) - i
+            inversions += n1 - i
             j += 1
         else:
             array[k] = arr1[i]
