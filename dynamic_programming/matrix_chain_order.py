@@ -1,11 +1,23 @@
-matrix_one = [[0 for x in range(7)] for y in range(20)]
-matrix_two = [[0 for x in range(25)] for y in range(7)]
-matrix_three = [[0 for x in range(15)] for y in range(25)]
-matrix_four = [[0 for x in range(25)] for y in range(15)]
+import csv
 
-matrix_list = [matrix_one, matrix_two, matrix_three, matrix_four]
+with open("matrix_dir/matrix_input.csv") as input_file:
+    csv_input = csv.reader(input_file)
+    matrix_list = []
+    current_matrix = -1
+    for line in csv_input:
+        if len(line) == 0:
+            matrix_list.append([])
+            current_matrix += 1
+        else:
+            new_list = [int(str_num) for str_num in line]
+            matrix_list[current_matrix].append(new_list)
+
+
+print(matrix_list)
 n = len(matrix_list)
 optimal_values = [[{"optimal_val": 0, "rows": -1, "columns": -1, "k": -1} for x in range(n)] for y in range(n)]
+
+ordered_matrix = []
 
 
 def initialize_optimal_values():
@@ -43,13 +55,16 @@ def matrix_chain_order():
 
 def print_brackets(i, j):
     if i == j:
-        print("Matrix n°: " + str(i + 1))
+        # print("Matrix n°: " + str(i + 1))
+        ordered_matrix.append(matrix_list[i])
     else:
         k = optimal_values[i][j]["k"]
-        print("(")
+        # print("(")
+        ordered_matrix.append("(")
         print_brackets(i, k)
         print_brackets(k + 1, j)
-        print(")")
+        # print(")")
+        ordered_matrix.append(")")
 
 
 def execute_algorithm():
@@ -58,4 +73,64 @@ def execute_algorithm():
 
 
 execute_algorithm()
-print(optimal_values)
+# print(optimal_values)
+# print(ordered_matrix)
+
+
+def multiply_matrix(matrix_one, matrix_two):
+    rows_one = len(matrix_one)
+    columns_one = len(matrix_one[0])
+    columns_two = len(matrix_two[0])
+    result_matrix = []
+    for i in range(rows_one):
+        result_matrix.append([])
+        for j in range(columns_two):
+            val = 0
+            for k in range(columns_one):
+                val = val + (matrix_one[i][k] * matrix_two[k][j])
+            result_matrix[i].append(val)
+    return result_matrix
+
+
+# print(multiply_matrix(matrix_list[0], matrix_list[1]))
+
+
+def ordered_matrix_refactoring(i, j, result_matrix):
+    del ordered_matrix[i:j]
+    ordered_matrix.append(0)
+    k = len(ordered_matrix) - 1
+    while k > i:
+        ordered_matrix[k] = ordered_matrix[k - 1]
+        k -= 1
+    ordered_matrix[i] = result_matrix
+
+
+def find_result_matrix():
+    left_bracket = False
+    first_matrix = False
+    # second_matrix = False
+    i = 0
+    while len(ordered_matrix) > 1:
+        if left_bracket is False:
+            left_bracket = True
+            i += 1
+        elif first_matrix is False:
+            if ordered_matrix[i] != "(":
+                first_matrix = True
+                i += 1
+            else:
+                left_bracket = False
+        if ordered_matrix[i] != "(":
+            result_matrix = multiply_matrix(ordered_matrix[i - 1], ordered_matrix[i])
+            ordered_matrix_refactoring(i - 2, i + 1, result_matrix)
+            i -= 2
+            if i > 0:
+                if ordered_matrix[i - 1] == "(":
+                    i -= 1
+                else:
+                    i -= 2
+        left_bracket = False
+        first_matrix = False
+
+
+
