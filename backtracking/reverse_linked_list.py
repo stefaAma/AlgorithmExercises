@@ -34,13 +34,6 @@ def create_linked_list(numbers_list):
     return head
 
 
-with open("input_files/list_numbers.csv") as input_file:
-    csv_input = csv.reader(input_file)
-    numbers = [num_list for index, num_list in enumerate(csv_input) if index == 0]
-
-linked_list = create_linked_list(numbers[0])
-
-
 def reverse_list(previous_item, current_item):
     if current_item.next_item is None:
         current_item.next_item = previous_item
@@ -59,5 +52,16 @@ def print_linked_list(head):
         index += 1
 
 
-new_list = reverse_list(None, linked_list)
-print_linked_list(new_list)
+def read_number_list():
+    with open("input_files/list_numbers.csv") as input_file:
+        csv_input = csv.reader(input_file)
+        num_matrix = [num_list for index, num_list in enumerate(csv_input) if index == 0]
+    return num_matrix[0]
+
+
+if __name__ == "__main__":
+    numbers = read_number_list()
+    linked_list = create_linked_list(numbers)
+
+    new_list = reverse_list(None, linked_list)
+    print_linked_list(new_list)
