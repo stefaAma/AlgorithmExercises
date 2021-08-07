@@ -24,10 +24,13 @@ def detach_last_item(current):
 
 
 def rotate_items(head, rotations):
-    for i in range(rotations):
-        last_item = detach_last_item(head)
-        last_item.next_item = head
-        head = last_item
+    if rotations < 1:
+        return None
+    if linked_list_length(head) > 1:
+        for i in range(rotations):
+            last_item = detach_last_item(head)
+            last_item.next_item = head
+            head = last_item
     return head
 
 
