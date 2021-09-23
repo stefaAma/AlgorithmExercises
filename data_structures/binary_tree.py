@@ -36,6 +36,9 @@ class BinaryTreeNode(object):
     def __str__(self):
         return f"Node Value - {self._key_value}"
 
+    def __del__(self):
+        print(f"-- Node {self._key_value} deleted --")
+
 
 class BinaryTree(object):
     def __init__(self, root=None):
@@ -145,6 +148,31 @@ class BinaryTree(object):
                     last_node = current_node
                     current_node = current_node.parent
 
+    def link_to_father_node(self, to_be_replaced, replacement):
+        if to_be_replaced.parent is None:
+            self._root = replacement
+        elif to_be_replaced.parent.left_child is to_be_replaced:
+            to_be_replaced.parent.left_child = replacement
+        else:
+            to_be_replaced.parent.right_child = replacement
+        if replacement is not None:
+            replacement.parent = to_be_replaced.parent
+
+    def delete_node(self, node):
+        if node.left_child is None:
+            self.link_to_father_node(node, node.right_child)
+        elif node.right_child is None:
+            self.link_to_father_node(node, node.left_child)
+        else:
+            predecessor = BinaryTree.predecessor(node)
+            if predecessor.parent is not node:
+                self.link_to_father_node(predecessor, predecessor.left_child)
+                predecessor.left_child = node.left_child
+                predecessor.left_child.parent = predecessor
+            predecessor.right_child = node.right_child
+            predecessor.right_child.parent = predecessor
+            self.link_to_father_node(node, predecessor)
+
 
 def create_binary_tree():
     root_node = input("Insert the root node value:  ")
@@ -168,7 +196,11 @@ if __name__ == "__main__":
         found_node = bt.find_node(int(val_to_find))
         if found_node is not None:
             print(f"The predecessor of -- {found_node} -- is -- {BinaryTree.predecessor(found_node)} --")
-            print(f"The successor of -- {found_node} -- is -- {BinaryTree.successor(found_node)} --")
+            print(f"The successor of -- {found_node} -- is -- {BinaryTree.successor(found_node)} --\n")
+            delete_insert = input("Do you want to delete this node? (Y = yes/ y = yes /anything else = no):  ")
+            if delete_insert == "Y" or delete_insert == "y":
+                bt.delete_node(found_node)
+                del found_node
         else:
             print("The value isn't in the tree")
         find_insert = input("Do you want to insert another value to find? (Y = yes/ y = yes /anything else = no):  ")
