@@ -173,6 +173,40 @@ class BinaryTree(object):
             predecessor.right_child.parent = predecessor
             self.link_to_father_node(node, predecessor)
 
+    @staticmethod
+    def symmetrical_check(left_side, right_side):
+        if left_side is None and right_side is None:
+            return True
+        if (left_side is None and right_side is not None) or (right_side is None and left_side is not None):
+            return False
+        if left_side.key_value != right_side.key_value:
+            return False
+        else:
+            is_symmetrical = BinaryTree.symmetrical_check(left_side.left_child, right_side.right_child)
+            if is_symmetrical is False:
+                return is_symmetrical
+            return BinaryTree.symmetrical_check(left_side.right_child, right_side.left_child)
+
+    def is_symmetric(self):
+        if self._root is None:
+            return True
+        else:
+            return BinaryTree.symmetrical_check(self._root.left_child, self._root.right_child)
+
+    @staticmethod
+    def binary_tree_max_depth(current_node, parent_depth):
+        if current_node is None:
+            return parent_depth
+        left_side_depth = BinaryTree.binary_tree_max_depth(current_node.left_child, parent_depth + 1)
+        right_side_depth = BinaryTree.binary_tree_max_depth(current_node.right_child, parent_depth + 1)
+        if right_side_depth > left_side_depth:
+            return right_side_depth
+        else:
+            return left_side_depth
+
+    def maximum_depth(self):
+        return BinaryTree.binary_tree_max_depth(self._root, 0)
+
 
 def create_binary_tree():
     root_node = input("Insert the root node value:  ")
