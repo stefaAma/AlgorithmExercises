@@ -239,7 +239,27 @@ if __name__ == "__main__":
             print("The value isn't in the tree")
         find_insert = input("Do you want to insert another value to find? (Y = yes/ y = yes /anything else = no):  ")
     print("\nOUTPUT: ")
+    print(f"The maximum depth that the tree reaches is {bt.maximum_depth()}")
     print(f"The minimum value stored in the tree is {bt.absolute_minimum()}")
     print(f"The maximum value stored in the tree is {bt.absolute_maximum()}")
     print("\n -- The tree values in ascending order -- \n")
     bt.print_tree_nodes()
+    print("--------- Custom binary tree ---------")
+    # node creation
+    node_one = BinaryTreeNode(1)
+    node_two = BinaryTreeNode(2)
+    node_three = BinaryTreeNode(2)
+    node_four = BinaryTreeNode(3)
+    node_five = BinaryTreeNode(3)
+    node_six = BinaryTreeNode(4)
+    node_seven = BinaryTreeNode(4)
+    # node linking
+    node_one.left_child = node_two
+    node_one.right_child = node_three
+    node_two.left_child = node_four
+    node_two.right_child = node_six
+    node_three.left_child = node_seven
+    node_three.right_child = node_five
+
+    custom_bt = BinaryTree(node_one)
+    print(f"The binary tree is symmetrical? -- Response: {custom_bt.is_symmetric()}\n")
